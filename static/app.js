@@ -177,6 +177,7 @@ function getSpeechLang(lang) {
         'it': 'it-IT',
         'ja': 'ja-JP',
         'ko': 'ko-KR',
+        'tl': 'fil-PH',
         'zh': 'zh-CN',
         'ru': 'ru-RU',
         'ar': 'ar-SA',
