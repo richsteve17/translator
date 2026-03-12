@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Translator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Live Translator</h1>
+        <p class="tagline">Real-time speech translation between two people</p>
+
+        <button id="create-btn" class="btn primary">Create New Room</button>
+
+        <div class="divider">or join an existing room</div>
+
+        <div class="join-row">
+            <input type="text" id="room-code" placeholder="Enter room code" maxlength="6" autocomplete="off">
+            <button id="join-btn" class="btn secondary">Join</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('create-btn').onclick = async () => {
+            const res = await fetch('/create-room', { method: 'POST' });
+            const data = await res.json();
+            window.location.href = '/room/' + data.room_id;
+        };
+
+        document.getElementById('join-btn').onclick = () => {
+            const code = document.getElementById('room-code').value.trim().toLowerCase();
+            if (code) window.location.href = '/room/' + code;
+        };
+
+        // Allow Enter key to join
+        document.getElementById('room-code').onkeydown = (e) => {
+            if (e.key === 'Enter') document.getElementById('join-btn').click();
+        };
+    </script>
+</body>
+</html>
