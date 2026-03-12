@@ -19,6 +19,10 @@ const langButtons = document.querySelectorAll('[data-lang-btn]');
 const micFill = document.getElementById('mic-fill');
 const noticeEl = document.getElementById('notice');
 const noticeToggle = document.getElementById('notice-toggle');
+const advancedToggle = document.getElementById('advanced-toggle');
+const advancedPanel = document.getElementById('advanced-panel');
+const advancedClose = document.getElementById('advanced-close');
+const advancedItems = document.querySelectorAll('.advanced-item');
 
 // --- State ---
 let ws = null;
@@ -45,6 +49,10 @@ const uiTranslations = {
         stop_listen: 'Stop Listening',
         start_call: 'Start Call',
         hangup: 'Hang Up',
+        advanced: 'Advanced',
+        advanced_title: 'Advanced language variants',
+        advanced_note: 'These help speech recognition match local accents. Translation output is still standard.',
+        close: 'Close',
         placeholder1: 'Select your language and click "Start Listening" to begin.',
         placeholder2: 'Share the room link with the other person so they can join.',
         share_link: 'Share link:',
@@ -68,6 +76,10 @@ const uiTranslations = {
         start_call: 'Iniciar llamada',
         hangup: 'Colgar',
         mic: 'Mic',
+        advanced: 'Avanzado',
+        advanced_title: 'Variantes avanzadas',
+        advanced_note: 'Ayudan a reconocer acentos locales. La traduccion es estandar.',
+        close: 'Cerrar',
         placeholder1: 'Selecciona tu idioma y presiona "Comenzar a escuchar".',
         placeholder2: 'Comparte el enlace de la sala para que la otra persona se una.',
         share_link: 'Compartir enlace:',
@@ -489,6 +501,35 @@ if (noticeToggle && noticeEl) {
         noticeEl.style.display = isHidden ? 'block' : 'none';
     };
 }
+
+if (advancedToggle && advancedPanel) {
+    advancedToggle.onclick = () => {
+        advancedPanel.classList.toggle('show');
+    };
+}
+
+if (advancedClose && advancedPanel) {
+    advancedClose.onclick = () => {
+        advancedPanel.classList.remove('show');
+    };
+}
+
+advancedItems.forEach((item) => {
+    item.onclick = () => {
+        const lang = item.getAttribute('data-lang');
+        if (!lang) return;
+        langSelect.value = lang;
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'set_language', language: lang }));
+            micBtn.disabled = false;
+            setStatus(uiTranslations[uiLang].ready_status, 'ok');
+        }
+        if (recognition) {
+            recognition.lang = getSpeechLang(lang);
+        }
+        advancedPanel.classList.remove('show');
+    };
+});
 
 async function ensureMicMeter() {
     if (analyser) return;
