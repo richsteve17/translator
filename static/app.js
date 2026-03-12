@@ -26,6 +26,32 @@ const advancedItems = document.querySelectorAll('.advanced-item');
 const textInput = document.getElementById('text-input');
 const sendBtn = document.getElementById('send-btn');
 const appVersionEl = document.getElementById('app-version');
+const debugEl = document.createElement('div');
+debugEl.id = 'debug-banner';
+debugEl.style.position = 'fixed';
+debugEl.style.left = '8px';
+debugEl.style.bottom = '8px';
+debugEl.style.zIndex = '9999';
+debugEl.style.maxWidth = '90vw';
+debugEl.style.background = 'rgba(0,0,0,0.7)';
+debugEl.style.color = '#ffb3b3';
+debugEl.style.fontSize = '12px';
+debugEl.style.padding = '6px 8px';
+debugEl.style.borderRadius = '6px';
+debugEl.style.display = 'none';
+document.body.appendChild(debugEl);
+
+function showDebug(msg) {
+    debugEl.textContent = msg;
+    debugEl.style.display = 'block';
+}
+
+window.addEventListener('error', (e) => {
+    showDebug(`JS error: ${e.message}`);
+});
+window.addEventListener('unhandledrejection', (e) => {
+    showDebug(`Promise error: ${e.reason}`);
+});
 
 // --- State ---
 let ws = null;

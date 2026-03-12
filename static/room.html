@@ -127,6 +127,12 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20260312-2"></script>
+    <script src="/static/app.js?v=20260312-3"></script>
+    <script>
+        (function() {
+            const el = document.getElementById('app-version');
+            if (el) el.textContent = 'js-loaded';
+        })();
+    </script>
 </body>
 </html>
