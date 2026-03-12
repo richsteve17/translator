@@ -9,11 +9,14 @@
 <body>
     <div class="container">
         <div class="lang-toggle">
-            <button class="btn small" data-lang-btn="en">English</button>
-            <button class="btn small secondary" data-lang-btn="es">Espanol</button>
-            <button class="btn small secondary" data-lang-btn="ar">العربية</button>
-            <button class="btn small secondary" data-lang-btn="hi">हिंदी</button>
-            <button class="btn small secondary" data-lang-btn="tl">Tagalog</button>
+            <label for="ui-lang" class="lang-label">UI</label>
+            <select id="ui-lang">
+                <option value="en">English</option>
+                <option value="es">Espanol</option>
+                <option value="ar">العربية</option>
+                <option value="hi">हिंदी</option>
+                <option value="tl">Tagalog</option>
+            </select>
         </div>
 
         <h1 data-i18n="title">Live Translator</h1>
@@ -127,14 +130,10 @@
                 const key = el.getAttribute('data-i18n-placeholder');
                 if (translations[lang][key]) el.setAttribute('placeholder', translations[lang][key]);
             });
-            document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
-                btn.classList.toggle('secondary', btn.getAttribute('data-lang-btn') !== lang);
-            });
         }
 
-        document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
-            btn.onclick = () => applyLang(btn.getAttribute('data-lang-btn'));
-        });
+        const uiLangSelect = document.getElementById('ui-lang');
+        uiLangSelect.onchange = () => applyLang(uiLangSelect.value);
 
         const preferred = (navigator.language || '').toLowerCase();
         if (preferred.startsWith('es')) {
@@ -146,6 +145,7 @@
         } else if (preferred.startsWith('tl') || preferred.startsWith('fil')) {
             currentLang = 'tl';
         }
+        uiLangSelect.value = currentLang;
         applyLang(currentLang);
 
         const baseUrl = window.location.origin;

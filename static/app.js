@@ -15,7 +15,7 @@ const callBtn = document.getElementById('call-btn');
 const hangupBtn = document.getElementById('hangup-btn');
 const localVideo = document.getElementById('local-video');
 const remoteVideo = document.getElementById('remote-video');
-const langButtons = document.querySelectorAll('[data-lang-btn]');
+const uiLangSelect = document.getElementById('ui-lang');
 const micFill = document.getElementById('mic-fill');
 const noticeEl = document.getElementById('notice');
 const noticeToggle = document.getElementById('notice-toggle');
@@ -573,9 +573,6 @@ function applyUiLang(lang) {
         const value = uiTranslations[lang][key];
         if (value) el.textContent = value;
     });
-    document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
-        btn.classList.toggle('secondary', btn.getAttribute('data-lang-btn') !== lang);
-    });
     copyBtn.textContent = uiTranslations[lang].copy;
     if (textInput) textInput.setAttribute('placeholder', uiTranslations[lang].type_here);
     if (sendBtn) sendBtn.textContent = uiTranslations[lang].send;
@@ -601,6 +598,10 @@ if (preferredLang.startsWith('es')) {
     uiLang = 'tl';
 }
 applyUiLang(uiLang);
+if (uiLangSelect) {
+    uiLangSelect.value = uiLang;
+    uiLangSelect.onchange = () => applyUiLang(uiLangSelect.value);
+}
 
 if (noticeToggle && noticeEl) {
     noticeToggle.onclick = () => {

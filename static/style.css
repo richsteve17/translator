@@ -560,6 +560,12 @@ input:focus, select:focus {
     align-items: center;
 }
 
+.lang-label {
+    font-size: 0.8rem;
+    color: #9aa3b2;
+    white-space: nowrap;
+}
+
 .info-pill {
     display: none;
     width: 26px;
