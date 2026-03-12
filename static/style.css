@@ -315,7 +315,7 @@ input:focus, select:focus {
 .video-tile.local {
     position: absolute;
     right: 12px;
-    bottom: 12px;
+    top: 12px;
     width: 180px;
     height: 120px;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -333,7 +333,7 @@ input:focus, select:focus {
     bottom: 12px;
     margin: 0;
     min-height: 0;
-    max-height: 42%;
+    max-height: 32%;
     padding: 0.75rem 1rem;
     border-radius: 12px;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.65));
@@ -407,7 +407,7 @@ input:focus, select:focus {
         width: 130px;
         height: 90px;
         right: 8px;
-        bottom: 8px;
+        top: 8px;
     }
 
     .share-link code {
