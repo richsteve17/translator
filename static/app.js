@@ -610,15 +610,23 @@ if (noticeToggle && noticeEl) {
     };
 }
 
+function toggleAdvancedPanel(force) {
+    if (!advancedPanel) return;
+    const isOpen = advancedPanel.classList.contains('show');
+    const next = typeof force === 'boolean' ? force : !isOpen;
+    advancedPanel.classList.toggle('show', next);
+    advancedPanel.style.display = next ? 'block' : 'none';
+}
+
 if (advancedToggle && advancedPanel) {
     advancedToggle.onclick = () => {
-        advancedPanel.classList.toggle('show');
+        toggleAdvancedPanel();
     };
 }
 
 if (advancedClose && advancedPanel) {
     advancedClose.onclick = () => {
-        advancedPanel.classList.remove('show');
+        toggleAdvancedPanel(false);
     };
 }
 
