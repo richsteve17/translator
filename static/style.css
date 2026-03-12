@@ -177,6 +177,35 @@ input:focus, select:focus {
     align-items: center;
 }
 
+.mic-meter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 140px;
+}
+
+.mic-label {
+    font-size: 0.8rem;
+    color: #9aa3b2;
+    white-space: nowrap;
+}
+
+.mic-bar {
+    flex: 1;
+    height: 8px;
+    background: #101626;
+    border: 1px solid #2a2a4a;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.mic-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4ecca3, #9fb0ff);
+    transition: width 0.05s linear;
+}
+
 /* --- Mic Button --- */
 
 .mic-btn {

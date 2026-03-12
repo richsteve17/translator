@@ -16,6 +16,7 @@ const hangupBtn = document.getElementById('hangup-btn');
 const localVideo = document.getElementById('local-video');
 const remoteVideo = document.getElementById('remote-video');
 const langButtons = document.querySelectorAll('[data-lang-btn]');
+const micFill = document.getElementById('mic-fill');
 
 // --- State ---
 let ws = null;
@@ -28,6 +29,11 @@ let callActive = false;
 let pendingOffer = null;
 let uiLang = 'en';
 let interimLineEl = null;
+let meterStream = null;
+let audioContext = null;
+let analyser = null;
+let meterData = null;
+let meterRaf = null;
 const uiTranslations = {
     en: {
         notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',
@@ -59,6 +65,7 @@ const uiTranslations = {
         stop_listen: 'Dejar de escuchar',
         start_call: 'Iniciar llamada',
         hangup: 'Colgar',
+        mic: 'Mic',
         placeholder1: 'Selecciona tu idioma y presiona "Comenzar a escuchar".',
         placeholder2: 'Comparte el enlace de la sala para que la otra persona se una.',
         share_link: 'Compartir enlace:',
@@ -254,6 +261,7 @@ function startListening() {
     micBtn.classList.add('active');
     setStatus(uiTranslations[uiLang].listen_status, 'listening');
     hidePlaceholder();
+    ensureMicMeter();
 }
 
 function stopListening() {
@@ -266,6 +274,7 @@ function stopListening() {
     micBtn.textContent = uiTranslations[uiLang].start_listen;
     micBtn.classList.remove('active');
     setStatus(uiTranslations[uiLang].paused, 'ok');
+    if (!callActive) stopMicMeter();
 }
 
 // --- WebRTC Call ---
@@ -286,6 +295,7 @@ async function startCall() {
     localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
     callActive = true;
     hangupBtn.disabled = false;
+    ensureMicMeter();
 
     if (pendingOffer) {
         await peerConnection.setRemoteDescription(new RTCSessionDescription(pendingOffer));
@@ -319,6 +329,7 @@ function stopCall() {
 
     localVideo.srcObject = null;
     remoteVideo.srcObject = null;
+    if (!isListening) stopMicMeter();
 }
 
 function ensurePeerConnection() {
@@ -455,6 +466,62 @@ if (preferredLang.startsWith('es')) {
     uiLang = 'es';
 }
 applyUiLang(uiLang);
+
+async function ensureMicMeter() {
+    if (analyser) return;
+    try {
+        if (!meterStream) {
+            if (localStream) {
+                meterStream = localStream;
+            } else {
+                meterStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            }
+        }
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createMediaStreamSource(meterStream);
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 512;
+        meterData = new Uint8Array(analyser.fftSize);
+        source.connect(analyser);
+        updateMicMeter();
+    } catch (e) {
+        // Ignore mic meter failures
+    }
+}
+
+function updateMicMeter() {
+    if (!analyser || !meterData) return;
+    analyser.getByteTimeDomainData(meterData);
+    let sum = 0;
+    for (let i = 0; i < meterData.length; i++) {
+        const v = (meterData[i] - 128) / 128;
+        sum += v * v;
+    }
+    const rms = Math.sqrt(sum / meterData.length);
+    const level = Math.min(1, rms * 3);
+    if (micFill) {
+        micFill.style.width = `${Math.round(level * 100)}%`;
+    }
+    meterRaf = requestAnimationFrame(updateMicMeter);
+}
+
+function stopMicMeter() {
+    if (meterRaf) {
+        cancelAnimationFrame(meterRaf);
+        meterRaf = null;
+    }
+    if (audioContext) {
+        audioContext.close();
+        audioContext = null;
+    }
+    analyser = null;
+    meterData = null;
+    if (micFill) micFill.style.width = '0%';
+    if (meterStream && meterStream !== localStream) {
+        meterStream.getTracks().forEach((t) => t.stop());
+    }
+    meterStream = null;
+}
 
 function escapeHtml(text) {
     const div = document.createElement('div');
