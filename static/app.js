@@ -421,6 +421,10 @@ langButtons.forEach((btn) => {
     btn.onclick = () => applyUiLang(btn.getAttribute('data-lang-btn'));
 });
 
+const preferredLang = (navigator.language || '').toLowerCase();
+if (preferredLang.startsWith('es')) {
+    uiLang = 'es';
+}
 applyUiLang(uiLang);
 
 function escapeHtml(text) {

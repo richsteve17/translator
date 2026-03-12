@@ -90,6 +90,10 @@
             btn.onclick = () => applyLang(btn.getAttribute('data-lang-btn'));
         });
 
+        const preferred = (navigator.language || '').toLowerCase();
+        if (preferred.startsWith('es')) {
+            currentLang = 'es';
+        }
         applyLang(currentLang);
 
         const baseUrl = window.location.origin;
