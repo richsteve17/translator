@@ -1,3 +1,10 @@
+const APP_VERSION = '2026-03-12.9';
+window.APP_LOADED = true;
+window.APP_VERSION = APP_VERSION;
+try {
+    console.log('APP_LOADED', APP_VERSION);
+} catch (e) {}
+
 // --- Get room ID from URL ---
 const roomId = window.location.pathname.split('/').pop();
 
@@ -26,20 +33,23 @@ const advancedItems = document.querySelectorAll('.advanced-item');
 const textInput = document.getElementById('text-input');
 const sendBtn = document.getElementById('send-btn');
 const appVersionEl = document.getElementById('app-version');
-const debugEl = document.createElement('div');
-debugEl.id = 'debug-banner';
-debugEl.style.position = 'fixed';
-debugEl.style.left = '8px';
-debugEl.style.bottom = '8px';
-debugEl.style.zIndex = '9999';
-debugEl.style.maxWidth = '90vw';
-debugEl.style.background = 'rgba(0,0,0,0.7)';
-debugEl.style.color = '#ffb3b3';
-debugEl.style.fontSize = '12px';
-debugEl.style.padding = '6px 8px';
-debugEl.style.borderRadius = '6px';
-debugEl.style.display = 'none';
-document.body.appendChild(debugEl);
+let debugEl = null;
+try {
+    debugEl = document.createElement('div');
+    debugEl.id = 'debug-banner';
+    debugEl.style.position = 'fixed';
+    debugEl.style.left = '8px';
+    debugEl.style.bottom = '8px';
+    debugEl.style.zIndex = '9999';
+    debugEl.style.maxWidth = '90vw';
+    debugEl.style.background = 'rgba(0,0,0,0.7)';
+    debugEl.style.color = '#ffb3b3';
+    debugEl.style.fontSize = '12px';
+    debugEl.style.padding = '6px 8px';
+    debugEl.style.borderRadius = '6px';
+    debugEl.style.display = 'none';
+    if (document.body) document.body.appendChild(debugEl);
+} catch (e) {}
 
 function showDebug(msg) {
     debugEl.textContent = msg;
@@ -69,12 +79,6 @@ let audioContext = null;
 let analyser = null;
 let meterData = null;
 let meterRaf = null;
-const APP_VERSION = '2026-03-12.8';
-window.APP_LOADED = true;
-window.APP_VERSION = APP_VERSION;
-try {
-    console.log('APP_LOADED', APP_VERSION);
-} catch (e) {}
 const uiTranslations = {
     en: {
         notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',
