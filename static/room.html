@@ -127,7 +127,14 @@
         </div>
     </div>
 
-    <script src="/static/app.v2.js?v=20260312-7"></script>
+    <script>
+        window.APP_LOADED = false;
+        window.APP_LOADED_MARK = 'pending';
+    </script>
+    <script src="/static/app.v2.js?v=20260312-8"
+        onload="window.APP_LOADED_MARK='onload'; if(document.getElementById('app-version')){document.getElementById('app-version').textContent='appjs:onload';}"
+        onerror="window.APP_LOADED_MARK='onerror'; if(document.getElementById('app-version')){document.getElementById('app-version').textContent='appjs:onerror';}">
+    </script>
     <script>
         (function() {
             const el = document.getElementById('app-version');
@@ -135,7 +142,7 @@
             if (window.APP_LOADED) {
                 el.textContent = `appjs:${window.APP_VERSION || 'unknown'}`;
             } else {
-                el.textContent = 'appjs:missing';
+                el.textContent = `appjs:missing (${window.APP_LOADED_MARK || 'n/a'})`;
             }
         })();
     </script>
