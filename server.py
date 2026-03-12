@@ -1,3 +1,4 @@
+import asyncio
 import json
 import uuid
 
@@ -121,8 +122,10 @@ async def process_text(room_id: str, sender_id: str, text: str):
     # Translate and send to other users
     for uid, user in room["users"].items():
         if uid != sender_id and user["language"]:
-            translated = translate_text(text, sender_lang, user["language"])
             try:
+                translated = await asyncio.to_thread(
+                    translate_text, text, sender_lang, user["language"]
+                )
                 await user["ws"].send_json({
                     "type": "subtitle",
                     "original": text,
