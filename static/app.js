@@ -69,7 +69,7 @@ let audioContext = null;
 let analyser = null;
 let meterData = null;
 let meterRaf = null;
-const APP_VERSION = '2026-03-12.2';
+const APP_VERSION = '2026-03-12.4';
 const uiTranslations = {
     en: {
         notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',

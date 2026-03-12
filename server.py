@@ -1,6 +1,7 @@
 import asyncio
 import json
 import uuid
+from fastapi.responses import HTMLResponse
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
@@ -32,6 +33,35 @@ async def home():
 async def room_page(room_id: str):
     return FileResponse(
         "static/room.html",
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+        },
+    )
+
+
+@app.get("/room-debug")
+async def room_debug():
+    html = f"""
+    <!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Room Debug</title>
+    </head>
+    <body style="font-family: system-ui; padding: 16px;">
+      <div id="debug-static">server-version: {APP_VERSION}</div>
+      <div id="debug-js"></div>
+      <script>
+        document.getElementById('debug-js').textContent = 'inline-js: ok';
+      </script>
+      <script src="/static/app.js?v=20260312-4"></script>
+    </body>
+    </html>
+    """
+    return HTMLResponse(
+        html,
         headers={
             "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
             "Pragma": "no-cache",
