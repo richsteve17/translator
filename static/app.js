@@ -69,7 +69,7 @@ let audioContext = null;
 let analyser = null;
 let meterData = null;
 let meterRaf = null;
-const APP_VERSION = '2026-03-12.4';
+const APP_VERSION = '2026-03-12.5';
 const uiTranslations = {
     en: {
         notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',
@@ -220,15 +220,27 @@ const uiTranslations = {
 };
 
 // --- Init ---
+if (appVersionEl) {
+    appVersionEl.textContent = `v${APP_VERSION}`;
+}
+
+const isRoomPage = !!(statusEl && subtitlesEl && micBtn && langSelect && roomCodeEl && shareUrlEl);
+if (!isRoomPage) {
+    // Avoid errors when this script runs on debug or other pages.
+    return;
+}
+
 roomCodeEl.textContent = roomId;
 shareUrlEl.textContent = window.location.href;
 
-copyBtn.onclick = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-        copyBtn.textContent = uiTranslations[uiLang].copied;
-        setTimeout(() => { copyBtn.textContent = uiTranslations[uiLang].copy; }, 2000);
-    });
-};
+if (copyBtn) {
+    copyBtn.onclick = () => {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            copyBtn.textContent = uiTranslations[uiLang].copied;
+            setTimeout(() => { copyBtn.textContent = uiTranslations[uiLang].copy; }, 2000);
+        });
+    };
+}
 
 // --- Check Speech API support ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -260,7 +272,9 @@ function connect() {
         } else if (data.type === 'transcript') {
             addSubtitle(data.text, null, 'self');
         } else if (data.type === 'status') {
-            userCountEl.textContent = data.user_count + ' ' + uiTranslations[uiLang].connected;
+            if (userCountEl) {
+                userCountEl.textContent = data.user_count + ' ' + uiTranslations[uiLang].connected;
+            }
             callBtn.disabled = !data.ready;
             if (!data.ready) {
                 stopCall();
@@ -612,8 +626,8 @@ function applyUiLang(lang) {
     if (!isListening) {
         micBtn.textContent = uiTranslations[lang].start_listen;
     }
-    callBtn.textContent = uiTranslations[lang].start_call;
-    hangupBtn.textContent = uiTranslations[lang].hangup;
+    if (callBtn) callBtn.textContent = uiTranslations[lang].start_call;
+    if (hangupBtn) hangupBtn.textContent = uiTranslations[lang].hangup;
 }
 
 langButtons.forEach((btn) => {
@@ -634,9 +648,6 @@ applyUiLang(uiLang);
 if (uiLangSelect) {
     uiLangSelect.value = uiLang;
     uiLangSelect.onchange = () => applyUiLang(uiLangSelect.value);
-}
-if (appVersionEl) {
-    appVersionEl.textContent = `v${APP_VERSION}`;
 }
 
 if (noticeToggle && noticeEl) {
