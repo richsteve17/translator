@@ -127,6 +127,7 @@ input:focus, select:focus {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    height: 100dvh;
 }
 
 .header {
@@ -358,7 +359,12 @@ input:focus, select:focus {
     }
 
     .video-tile video {
-        height: 150px;
+        height: 110px;
+    }
+
+    .subtitles-area {
+        min-height: 55dvh;
+        padding: 1rem;
     }
 
     .share-link code {
