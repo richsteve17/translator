@@ -171,6 +171,10 @@ function getSpeechLang(lang) {
     const map = {
         'en': 'en-US',
         'es': 'es-ES',
+        'es-us': 'es-US',
+        'es-mx': 'es-MX',
+        'es-co': 'es-CO',
+        'es-ar': 'es-AR',
         'fr': 'fr-FR',
         'de': 'de-DE',
         'pt': 'pt-BR',
@@ -178,9 +182,17 @@ function getSpeechLang(lang) {
         'ja': 'ja-JP',
         'ko': 'ko-KR',
         'tl': 'fil-PH',
+        'ms': 'ms-MY',
+        'id': 'id-ID',
+        'vi': 'vi-VN',
+        'th': 'th-TH',
+        'az': 'az-AZ',
         'zh': 'zh-CN',
+        'zh-tw': 'zh-TW',
         'hi': 'hi-IN',
         'ru': 'ru-RU',
+        'ur': 'ur-PK',
+        'tr': 'tr-TR',
         'ar': 'ar-SA',
     };
     return map[lang] || lang;
