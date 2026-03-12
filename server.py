@@ -18,12 +18,24 @@ rooms: dict[str, dict] = {}
 
 @app.get("/")
 async def home():
-    return FileResponse("static/index.html")
+    return FileResponse(
+        "static/index.html",
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+        },
+    )
 
 
 @app.get("/room/{room_id}")
 async def room_page(room_id: str):
-    return FileResponse("static/room.html")
+    return FileResponse(
+        "static/room.html",
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+        },
+    )
 
 
 @app.post("/create-room")
