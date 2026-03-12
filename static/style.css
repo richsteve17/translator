@@ -264,27 +264,35 @@ input:focus, select:focus {
     margin-top: 4px;
 }
 
-/* --- Video Area --- */
+/* --- Video Area (Overlay) --- */
 
 .video-area {
+    position: fixed;
+    right: 12px;
+    bottom: 76px;
+    z-index: 20;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    width: 170px;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(12, 16, 32, 0.8);
+    border: 1px solid #2a2a4a;
+    backdrop-filter: blur(8px);
 }
 
 .video-tile {
     background: #101626;
     border: 1px solid #2a2a4a;
-    border-radius: 12px;
-    padding: 0.5rem;
+    border-radius: 10px;
+    padding: 0.35rem;
     position: relative;
-    min-height: 160px;
 }
 
 .video-tile video {
     width: 100%;
-    height: 140px;
+    height: 110px;
     background: #0c1020;
     border-radius: 8px;
     object-fit: cover;
@@ -292,11 +300,11 @@ input:focus, select:focus {
 
 .video-label {
     position: absolute;
-    top: 8px;
-    left: 10px;
+    top: 6px;
+    left: 8px;
     background: rgba(0, 0, 0, 0.5);
     color: #ddd;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     padding: 2px 6px;
     border-radius: 4px;
 }
@@ -355,11 +363,13 @@ input:focus, select:focus {
     }
 
     .video-area {
-        grid-template-columns: 1fr;
+        right: 8px;
+        bottom: 64px;
+        width: 140px;
     }
 
     .video-tile video {
-        height: 110px;
+        height: 95px;
     }
 
     .subtitles-area {
