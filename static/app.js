@@ -69,7 +69,7 @@ let audioContext = null;
 let analyser = null;
 let meterData = null;
 let meterRaf = null;
-const APP_VERSION = '2026-03-12.5';
+const APP_VERSION = '2026-03-12.6';
 const uiTranslations = {
     en: {
         notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',
@@ -628,6 +628,9 @@ function applyUiLang(lang) {
     }
     if (callBtn) callBtn.textContent = uiTranslations[lang].start_call;
     if (hangupBtn) hangupBtn.textContent = uiTranslations[lang].hangup;
+    if (appVersionEl) {
+        appVersionEl.textContent = `v${APP_VERSION} | ui=${lang}`;
+    }
 }
 
 langButtons.forEach((btn) => {
@@ -648,6 +651,8 @@ applyUiLang(uiLang);
 if (uiLangSelect) {
     uiLangSelect.value = uiLang;
     uiLangSelect.onchange = () => applyUiLang(uiLangSelect.value);
+} else {
+    showDebug('UI lang select not found');
 }
 
 if (noticeToggle && noticeEl) {
@@ -669,6 +674,8 @@ if (advancedToggle && advancedPanel) {
     advancedToggle.onclick = () => {
         toggleAdvancedPanel();
     };
+} else {
+    showDebug('Advanced toggle/panel missing');
 }
 
 if (advancedClose && advancedPanel) {
@@ -700,6 +707,8 @@ if (sendBtn && textInput) {
         if (!text) return;
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ type: 'speech_text', text }));
+        } else {
+            showDebug('WebSocket not ready');
         }
         textInput.value = '';
     };
