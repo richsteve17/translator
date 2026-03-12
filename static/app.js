@@ -27,6 +27,7 @@ let peerConnection = null;
 let callActive = false;
 let pendingOffer = null;
 let uiLang = 'en';
+let interimLineEl = null;
 const uiTranslations = {
     en: {
         notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',
@@ -199,19 +200,28 @@ function startListening() {
 
     recognition = new SpeechRecognition();
     recognition.continuous = true;
-    recognition.interimResults = false;
+    recognition.interimResults = true;
     recognition.lang = getSpeechLang(langSelect.value);
 
     recognition.onresult = (event) => {
-        // Get the latest final result
+        let interimText = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i].isFinal) {
-                const text = event.results[i][0].transcript.trim();
-                if (text && ws && ws.readyState === WebSocket.OPEN) {
+            const result = event.results[i];
+            const text = result[0].transcript.trim();
+            if (!text) continue;
+            if (result.isFinal) {
+                clearInterim();
+                if (ws && ws.readyState === WebSocket.OPEN) {
                     console.log('[Speech] Recognized:', text);
                     ws.send(JSON.stringify({ type: 'speech_text', text: text }));
                 }
+            } else {
+                interimText += (interimText ? ' ' : '') + text;
             }
+        }
+
+        if (interimText) {
+            showInterim(interimText);
         }
     };
 
@@ -252,6 +262,7 @@ function stopListening() {
         recognition.stop();
         recognition = null;
     }
+    clearInterim();
     micBtn.textContent = uiTranslations[uiLang].start_listen;
     micBtn.classList.remove('active');
     setStatus(uiTranslations[uiLang].paused, 'ok');
@@ -391,6 +402,24 @@ function addSubtitle(text, original, source) {
 
 function hidePlaceholder() {
     if (placeholderEl) placeholderEl.style.display = 'none';
+}
+
+function showInterim(text) {
+    hidePlaceholder();
+    if (!interimLineEl) {
+        interimLineEl = document.createElement('div');
+        interimLineEl.classList.add('subtitle-line', 'self', 'interim');
+        subtitlesEl.appendChild(interimLineEl);
+    }
+    interimLineEl.innerHTML = `<span class="label">You:</span> ${escapeHtml(text)}<span class="dots">…</span>`;
+    subtitlesEl.scrollTop = subtitlesEl.scrollHeight;
+}
+
+function clearInterim() {
+    if (interimLineEl && interimLineEl.parentNode) {
+        interimLineEl.parentNode.removeChild(interimLineEl);
+    }
+    interimLineEl = null;
 }
 
 // --- Helpers ---

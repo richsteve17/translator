@@ -243,6 +243,15 @@ input:focus, select:focus {
     font-size: 0.9rem;
 }
 
+.subtitle-line.interim {
+    color: #9aa3b2;
+    font-style: italic;
+}
+
+.subtitle-line .dots {
+    opacity: 0.6;
+}
+
 .subtitle-line .label {
     color: #555;
     font-size: 0.8rem;
