@@ -127,11 +127,16 @@
         </div>
     </div>
 
-    <script src="/static/app.js?v=20260312-6"></script>
+    <script src="/static/app.js?v=20260312-7"></script>
     <script>
         (function() {
             const el = document.getElementById('app-version');
-            if (el) el.textContent = 'js-loaded';
+            if (!el) return;
+            if (window.APP_LOADED) {
+                el.textContent = `appjs:${window.APP_VERSION || 'unknown'}`;
+            } else {
+                el.textContent = 'appjs:missing';
+            }
         })();
     </script>
 </body>
