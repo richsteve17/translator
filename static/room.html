@@ -45,22 +45,24 @@
             </div>
         </div>
 
-        <div class="video-area">
-            <div class="video-tile">
-                <div class="video-label">You</div>
-                <video id="local-video" autoplay playsinline muted></video>
+        <div class="stage">
+            <div class="video-area">
+                <div class="video-tile remote">
+                    <div class="video-label">Partner</div>
+                    <video id="remote-video" autoplay playsinline></video>
+                </div>
+                <div class="video-tile local">
+                    <div class="video-label">You</div>
+                    <video id="local-video" autoplay playsinline muted></video>
+                </div>
             </div>
-            <div class="video-tile">
-                <div class="video-label">Partner</div>
-                <video id="remote-video" autoplay playsinline></video>
-            </div>
-        </div>
 
-        <div class="subtitles-area" id="subtitles">
-            <div class="placeholder" id="placeholder">
-                <span data-i18n="placeholder1">Select your language and click "Start Listening" to begin.</span>
-                <br><br>
-                <span data-i18n="placeholder2">Share the room link with the other person so they can join.</span>
+            <div class="subtitles-area overlay" id="subtitles">
+                <div class="placeholder" id="placeholder">
+                    <span data-i18n="placeholder1">Select your language and click "Start Listening" to begin.</span>
+                    <br><br>
+                    <span data-i18n="placeholder2">Share the room link with the other person so they can join.</span>
+                </div>
             </div>
         </div>
 
