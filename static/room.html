@@ -13,15 +13,21 @@
                 <h2>Room: <span id="room-code"></span></h2>
                 <div class="status" id="status">Connecting...</div>
             </div>
-            <div class="notice compact">
-                Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.
+            <div class="header-row">
+                <div class="notice compact" data-i18n="notice">
+                    Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.
+                </div>
+                <div class="lang-toggle">
+                    <button class="btn small" data-lang-btn="en">English</button>
+                    <button class="btn small secondary" data-lang-btn="es">Espanol</button>
+                </div>
             </div>
 
             <div class="controls-row">
                 <div class="language-select">
-                    <label for="language">I speak:</label>
+                    <label for="language" data-i18n="i_speak">I speak:</label>
                     <select id="language">
-                        <option value="">Select language</option>
+                        <option value="" data-i18n="select_lang">Select language</option>
                         <option value="en">English</option>
                         <option value="es">Spanish</option>
                         <option value="pt">Portuguese</option>
@@ -31,10 +37,10 @@
                         <option value="ru">Russian</option>
                     </select>
                 </div>
-                <button id="mic-btn" class="btn mic-btn" disabled>Start Listening</button>
+                <button id="mic-btn" class="btn mic-btn" disabled data-i18n="start_listen">Start Listening</button>
                 <div class="call-controls">
-                    <button id="call-btn" class="btn secondary" disabled>Start Call</button>
-                    <button id="hangup-btn" class="btn secondary" disabled>Hang Up</button>
+                    <button id="call-btn" class="btn secondary" disabled data-i18n="start_call">Start Call</button>
+                    <button id="hangup-btn" class="btn secondary" disabled data-i18n="hangup">Hang Up</button>
                 </div>
             </div>
         </div>
@@ -52,17 +58,17 @@
 
         <div class="subtitles-area" id="subtitles">
             <div class="placeholder" id="placeholder">
-                Select your language and click "Start Listening" to begin.
+                <span data-i18n="placeholder1">Select your language and click "Start Listening" to begin.</span>
                 <br><br>
-                Share the room link with the other person so they can join.
+                <span data-i18n="placeholder2">Share the room link with the other person so they can join.</span>
             </div>
         </div>
 
         <div class="footer">
             <div class="share-link">
-                <span>Share link:</span>
+                <span data-i18n="share_link">Share link:</span>
                 <code id="share-url"></code>
-                <button id="copy-btn" class="btn small">Copy</button>
+                <button id="copy-btn" class="btn small" data-i18n="copy">Copy</button>
             </div>
             <div class="user-count" id="user-count">0 connected</div>
         </div>

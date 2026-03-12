@@ -15,6 +15,7 @@ const callBtn = document.getElementById('call-btn');
 const hangupBtn = document.getElementById('hangup-btn');
 const localVideo = document.getElementById('local-video');
 const remoteVideo = document.getElementById('remote-video');
+const langButtons = document.querySelectorAll('[data-lang-btn]');
 
 // --- State ---
 let ws = null;
@@ -25,6 +26,53 @@ let localStream = null;
 let peerConnection = null;
 let callActive = false;
 let pendingOffer = null;
+let uiLang = 'en';
+const uiTranslations = {
+    en: {
+        notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',
+        i_speak: 'I speak:',
+        select_lang: 'Select language',
+        start_listen: 'Start Listening',
+        stop_listen: 'Stop Listening',
+        start_call: 'Start Call',
+        hangup: 'Hang Up',
+        placeholder1: 'Select your language and click "Start Listening" to begin.',
+        placeholder2: 'Share the room link with the other person so they can join.',
+        share_link: 'Share link:',
+        copy: 'Copy',
+        copied: 'Copied!',
+        connected: 'connected',
+        incoming: 'Incoming call. Click "Start Call" to accept.',
+        listen_status: 'Listening...',
+        paused: 'Paused. Click to resume.',
+        connected_status: 'Connected. Select your language to start.',
+        ready_status: 'Ready. Click "Start Listening" to begin.',
+        mic_denied: 'Microphone access denied. Allow mic and try again.',
+        cam_denied: 'Camera/mic permission denied. Allow and try again.',
+    },
+    es: {
+        notice: 'Mejores resultados en Android Chrome. iOS Safari/WKWebView puede no soportar dictado en vivo.',
+        i_speak: 'Yo hablo:',
+        select_lang: 'Selecciona idioma',
+        start_listen: 'Comenzar a escuchar',
+        stop_listen: 'Dejar de escuchar',
+        start_call: 'Iniciar llamada',
+        hangup: 'Colgar',
+        placeholder1: 'Selecciona tu idioma y presiona "Comenzar a escuchar".',
+        placeholder2: 'Comparte el enlace de la sala para que la otra persona se una.',
+        share_link: 'Compartir enlace:',
+        copy: 'Copiar',
+        copied: 'Copiado!',
+        connected: 'conectado',
+        incoming: 'Llamada entrante. Presiona "Iniciar llamada" para aceptar.',
+        listen_status: 'Escuchando...',
+        paused: 'Pausado. Toca para reanudar.',
+        connected_status: 'Conectado. Selecciona tu idioma para empezar.',
+        ready_status: 'Listo. Presiona "Comenzar a escuchar".',
+        mic_denied: 'Acceso al microfono denegado. Permite el microfono y reintenta.',
+        cam_denied: 'Permiso de camara/microfono denegado. Permite y reintenta.',
+    }
+};
 
 // --- Init ---
 roomCodeEl.textContent = roomId;
@@ -32,8 +80,8 @@ shareUrlEl.textContent = window.location.href;
 
 copyBtn.onclick = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+        copyBtn.textContent = uiTranslations[uiLang].copied;
+        setTimeout(() => { copyBtn.textContent = uiTranslations[uiLang].copy; }, 2000);
     });
 };
 
@@ -50,7 +98,7 @@ function connect() {
     ws = new WebSocket(`${wsProtocol}//${location.host}/ws/${roomId}`);
 
     ws.onopen = () => {
-        setStatus('Connected. Select your language to start.', 'ok');
+        setStatus(uiTranslations[uiLang].connected_status, 'ok');
         if (langSelect.value) {
             ws.send(JSON.stringify({ type: 'set_language', language: langSelect.value }));
             micBtn.disabled = false;
@@ -67,7 +115,7 @@ function connect() {
         } else if (data.type === 'transcript') {
             addSubtitle(data.text, null, 'self');
         } else if (data.type === 'status') {
-            userCountEl.textContent = data.user_count + ' connected';
+            userCountEl.textContent = data.user_count + ' ' + uiTranslations[uiLang].connected;
             callBtn.disabled = !data.ready;
             if (!data.ready) {
                 stopCall();
@@ -100,7 +148,7 @@ langSelect.onchange = () => {
     if (langSelect.value && ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify({ type: 'set_language', language: langSelect.value }));
         micBtn.disabled = false;
-        setStatus('Ready. Click "Start Listening" to begin.', 'ok');
+        setStatus(uiTranslations[uiLang].ready_status, 'ok');
     }
     // Update recognition language if already created
     if (recognition) {
@@ -170,9 +218,9 @@ function startListening() {
     recognition.onerror = (event) => {
         console.log('[Speech] Error:', event.error);
         if (event.error === 'not-allowed') {
-            setStatus('Microphone access denied. Allow mic and try again.', 'error');
+            setStatus(uiTranslations[uiLang].mic_denied, 'error');
             isListening = false;
-            micBtn.textContent = 'Start Listening';
+            micBtn.textContent = uiTranslations[uiLang].start_listen;
             micBtn.classList.remove('active');
         }
         // For other errors (network, no-speech), onend will restart it
@@ -192,9 +240,9 @@ function startListening() {
 
     recognition.start();
     isListening = true;
-    micBtn.textContent = 'Stop Listening';
+    micBtn.textContent = uiTranslations[uiLang].stop_listen;
     micBtn.classList.add('active');
-    setStatus('Listening...', 'listening');
+    setStatus(uiTranslations[uiLang].listen_status, 'listening');
     hidePlaceholder();
 }
 
@@ -204,9 +252,9 @@ function stopListening() {
         recognition.stop();
         recognition = null;
     }
-    micBtn.textContent = 'Start Listening';
+    micBtn.textContent = uiTranslations[uiLang].start_listen;
     micBtn.classList.remove('active');
-    setStatus('Paused. Click to resume.', 'ok');
+    setStatus(uiTranslations[uiLang].paused, 'ok');
 }
 
 // --- WebRTC Call ---
@@ -217,7 +265,7 @@ async function startCall() {
     try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
     } catch (err) {
-        setStatus('Camera/mic permission denied. Allow and try again.', 'error');
+        setStatus(uiTranslations[uiLang].cam_denied, 'error');
         return;
     }
 
@@ -284,7 +332,7 @@ async function handleOffer(offer) {
     if (!callActive) {
         pendingOffer = offer;
         callBtn.disabled = false;
-        setStatus('Incoming call. Click "Start Call" to accept.', 'ok');
+        setStatus(uiTranslations[uiLang].incoming, 'ok');
         return;
     }
     ensurePeerConnection();
@@ -350,6 +398,30 @@ function setStatus(text, type) {
     statusEl.textContent = text;
     statusEl.className = 'status ' + (type || '');
 }
+
+function applyUiLang(lang) {
+    uiLang = lang;
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+        const key = el.getAttribute('data-i18n');
+        const value = uiTranslations[lang][key];
+        if (value) el.textContent = value;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach((btn) => {
+        btn.classList.toggle('secondary', btn.getAttribute('data-lang-btn') !== lang);
+    });
+    copyBtn.textContent = uiTranslations[lang].copy;
+    if (!isListening) {
+        micBtn.textContent = uiTranslations[lang].start_listen;
+    }
+    callBtn.textContent = uiTranslations[lang].start_call;
+    hangupBtn.textContent = uiTranslations[lang].hangup;
+}
+
+langButtons.forEach((btn) => {
+    btn.onclick = () => applyUiLang(btn.getAttribute('data-lang-btn'));
+});
+
+applyUiLang(uiLang);
 
 function escapeHtml(text) {
     const div = document.createElement('div');
