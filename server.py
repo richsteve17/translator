@@ -7,6 +7,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from deep_translator import GoogleTranslator
 
+APP_VERSION = "2026-03-12.3"
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -43,6 +44,10 @@ async def create_room():
     room_id = uuid.uuid4().hex[:6]
     rooms[room_id] = {"users": {}}
     return {"room_id": room_id}
+
+@app.get("/version")
+async def version():
+    return {"version": APP_VERSION}
 
 
 # --- WebSocket ---
