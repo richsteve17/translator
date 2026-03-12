@@ -56,7 +56,7 @@ async def room_debug():
       <script>
         document.getElementById('debug-js').textContent = 'inline-js: ok';
       </script>
-      <script src="/static/app.js?v=20260312-7"></script>
+      <script src="/static/app.v2.js?v=20260312-7"></script>
     </body>
     </html>
     """
