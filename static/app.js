@@ -25,6 +25,7 @@ const advancedClose = document.getElementById('advanced-close');
 const advancedItems = document.querySelectorAll('.advanced-item');
 const textInput = document.getElementById('text-input');
 const sendBtn = document.getElementById('send-btn');
+const appVersionEl = document.getElementById('app-version');
 
 // --- State ---
 let ws = null;
@@ -42,6 +43,7 @@ let audioContext = null;
 let analyser = null;
 let meterData = null;
 let meterRaf = null;
+const APP_VERSION = '2026-03-12.2';
 const uiTranslations = {
     en: {
         notice: 'Best results on Android Chrome. iOS Safari/WKWebView may not support live dictation.',
@@ -606,6 +608,9 @@ applyUiLang(uiLang);
 if (uiLangSelect) {
     uiLangSelect.value = uiLang;
     uiLangSelect.onchange = () => applyUiLang(uiLangSelect.value);
+}
+if (appVersionEl) {
+    appVersionEl.textContent = `v${APP_VERSION}`;
 }
 
 if (noticeToggle && noticeEl) {

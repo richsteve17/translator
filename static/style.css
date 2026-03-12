@@ -485,6 +485,11 @@ input:focus, select:focus {
     color: #4ecca3;
 }
 
+.app-version {
+    font-size: 0.7rem;
+    color: #666;
+}
+
 /* --- Mobile --- */
 
 @media (max-width: 500px) {
