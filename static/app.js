@@ -573,6 +573,11 @@ function applyUiLang(lang) {
         const value = uiTranslations[lang][key];
         if (value) el.textContent = value;
     });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const value = uiTranslations[lang][key];
+        if (value) el.setAttribute('placeholder', value);
+    });
     copyBtn.textContent = uiTranslations[lang].copy;
     if (textInput) textInput.setAttribute('placeholder', uiTranslations[lang].type_here);
     if (sendBtn) sendBtn.textContent = uiTranslations[lang].send;
