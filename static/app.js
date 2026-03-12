@@ -23,6 +23,8 @@ const advancedToggle = document.getElementById('advanced-toggle');
 const advancedPanel = document.getElementById('advanced-panel');
 const advancedClose = document.getElementById('advanced-close');
 const advancedItems = document.querySelectorAll('.advanced-item');
+const textInput = document.getElementById('text-input');
+const sendBtn = document.getElementById('send-btn');
 
 // --- State ---
 let ws = null;
@@ -49,10 +51,13 @@ const uiTranslations = {
         stop_listen: 'Stop Listening',
         start_call: 'Start Call',
         hangup: 'Hang Up',
+        mic: 'Mic',
         advanced: 'Advanced',
         advanced_title: 'Advanced language variants',
         advanced_note: 'These help speech recognition match local accents. Translation output is still standard.',
         close: 'Close',
+        send: 'Send',
+        type_here: 'Type a message',
         placeholder1: 'Select your language and click "Start Listening" to begin.',
         placeholder2: 'Share the room link with the other person so they can join.',
         share_link: 'Share link:',
@@ -80,6 +85,8 @@ const uiTranslations = {
         advanced_title: 'Variantes avanzadas',
         advanced_note: 'Ayudan a reconocer acentos locales. La traduccion es estandar.',
         close: 'Cerrar',
+        send: 'Enviar',
+        type_here: 'Escribe un mensaje',
         placeholder1: 'Selecciona tu idioma y presiona "Comenzar a escuchar".',
         placeholder2: 'Comparte el enlace de la sala para que la otra persona se una.',
         share_link: 'Compartir enlace:',
@@ -93,6 +100,94 @@ const uiTranslations = {
         ready_status: 'Listo. Presiona "Comenzar a escuchar".',
         mic_denied: 'Acceso al microfono denegado. Permite el microfono y reintenta.',
         cam_denied: 'Permiso de camara/microfono denegado. Permite y reintenta.',
+    }
+    ,
+    ar: {
+        notice: 'لأفضل النتائج على أندرويد، استخدم كروم. قد لا يدعم Safari/WKWebView الإملاء المباشر.',
+        i_speak: 'أتحدث:',
+        select_lang: 'اختر اللغة',
+        start_listen: 'ابدأ الاستماع',
+        stop_listen: 'إيقاف الاستماع',
+        start_call: 'بدء المكالمة',
+        hangup: 'إنهاء المكالمة',
+        mic: 'ميك',
+        advanced: 'متقدم',
+        advanced_title: 'بدائل متقدمة للغة',
+        advanced_note: 'تساعد على مطابقة اللهجات المحلية في التعرف الصوتي.',
+        close: 'إغلاق',
+        send: 'إرسال',
+        type_here: 'اكتب رسالة',
+        placeholder1: 'اختر لغتك واضغط "ابدأ الاستماع".',
+        placeholder2: 'شارك رابط الغرفة لينضم الطرف الآخر.',
+        share_link: 'مشاركة الرابط:',
+        copy: 'نسخ',
+        copied: 'تم النسخ!',
+        connected: 'متصل',
+        incoming: 'مكالمة واردة. اضغط "بدء المكالمة" للقبول.',
+        listen_status: 'يستمع...',
+        paused: 'متوقف مؤقتًا. اضغط للاستئناف.',
+        connected_status: 'تم الاتصال. اختر لغتك للبدء.',
+        ready_status: 'جاهز. اضغط "ابدأ الاستماع".',
+        mic_denied: 'تم رفض الميكروفون. اسمح وحاول مرة أخرى.',
+        cam_denied: 'تم رفض الكاميرا/الميكروفون. اسمح وحاول مرة أخرى.',
+    },
+    hi: {
+        notice: 'Android पर बेहतर परिणाम के लिए Chrome उपयोग करें। iOS Safari/WKWebView में लाइव डिक्टेशन काम न कर सकता है।',
+        i_speak: 'मैं बोलता/बोलती हूँ:',
+        select_lang: 'भाषा चुनें',
+        start_listen: 'सुनना शुरू करें',
+        stop_listen: 'सुनना बंद करें',
+        start_call: 'कॉल शुरू करें',
+        hangup: 'कॉल समाप्त',
+        mic: 'माइक',
+        advanced: 'एडवांस',
+        advanced_title: 'एडवांस भाषा विकल्प',
+        advanced_note: 'लोकल एक्सेंट पहचान में मदद करते हैं।',
+        close: 'बंद करें',
+        send: 'भेजें',
+        type_here: 'मैसेज टाइप करें',
+        placeholder1: 'अपनी भाषा चुनें और "सुनना शुरू करें" दबाएं।',
+        placeholder2: 'दूसरे व्यक्ति को जोड़ने के लिए लिंक शेयर करें।',
+        share_link: 'लिंक शेयर करें:',
+        copy: 'कॉपी',
+        copied: 'कॉपी हो गया!',
+        connected: 'कनेक्टेड',
+        incoming: 'इनकमिंग कॉल। स्वीकार करने के लिए "कॉल शुरू करें" दबाएं।',
+        listen_status: 'सुन रहा है...',
+        paused: 'रुका हुआ। फिर से शुरू करने के लिए दबाएं।',
+        connected_status: 'कनेक्टेड। शुरू करने के लिए भाषा चुनें।',
+        ready_status: 'तैयार। "सुनना शुरू करें" दबाएं।',
+        mic_denied: 'माइक अनुमति नहीं मिली। अनुमति दें और फिर कोशिश करें।',
+        cam_denied: 'कैमरा/माइक अनुमति नहीं मिली। अनुमति दें और फिर कोशिश करें।',
+    },
+    tl: {
+        notice: 'Pinakamahusay sa Android Chrome. Maaaring hindi gumana ang live dictation sa iOS Safari/WKWebView.',
+        i_speak: 'Nagsasalita ako ng:',
+        select_lang: 'Pumili ng wika',
+        start_listen: 'Simulan ang pakikinig',
+        stop_listen: 'Itigil ang pakikinig',
+        start_call: 'Simulan ang tawag',
+        hangup: 'I-end ang tawag',
+        mic: 'Mic',
+        advanced: 'Advanced',
+        advanced_title: 'Advanced na mga variant',
+        advanced_note: 'Tumutulong sa pagkilala ng lokal na accent.',
+        close: 'Isara',
+        send: 'Ipadala',
+        type_here: 'Mag-type ng mensahe',
+        placeholder1: 'Piliin ang wika at pindutin ang "Simulan ang pakikinig".',
+        placeholder2: 'I-share ang link para makasali ang kausap.',
+        share_link: 'I-share ang link:',
+        copy: 'Kopyahin',
+        copied: 'Nakopya!',
+        connected: 'nakakonekta',
+        incoming: 'May papasok na tawag. Pindutin ang "Simulan ang tawag".',
+        listen_status: 'Nakikinig...',
+        paused: 'Naka-pause. Pindutin para magpatuloy.',
+        connected_status: 'Nakakonekta. Piliin ang wika para magsimula.',
+        ready_status: 'Handa na. Pindutin ang "Simulan ang pakikinig".',
+        mic_denied: 'Tinanggihan ang mic. Payagan at subukan ulit.',
+        cam_denied: 'Tinanggihan ang camera/mic. Payagan at subukan ulit.',
     }
 };
 
@@ -482,6 +577,8 @@ function applyUiLang(lang) {
         btn.classList.toggle('secondary', btn.getAttribute('data-lang-btn') !== lang);
     });
     copyBtn.textContent = uiTranslations[lang].copy;
+    if (textInput) textInput.setAttribute('placeholder', uiTranslations[lang].type_here);
+    if (sendBtn) sendBtn.textContent = uiTranslations[lang].send;
     if (!isListening) {
         micBtn.textContent = uiTranslations[lang].start_listen;
     }
@@ -496,6 +593,12 @@ langButtons.forEach((btn) => {
 const preferredLang = (navigator.language || '').toLowerCase();
 if (preferredLang.startsWith('es')) {
     uiLang = 'es';
+} else if (preferredLang.startsWith('ar')) {
+    uiLang = 'ar';
+} else if (preferredLang.startsWith('hi')) {
+    uiLang = 'hi';
+} else if (preferredLang.startsWith('tl') || preferredLang.startsWith('fil')) {
+    uiLang = 'tl';
 }
 applyUiLang(uiLang);
 
@@ -534,6 +637,23 @@ advancedItems.forEach((item) => {
         advancedPanel.classList.remove('show');
     };
 });
+
+if (sendBtn && textInput) {
+    sendBtn.onclick = () => {
+        const text = textInput.value.trim();
+        if (!text) return;
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'speech_text', text }));
+        }
+        textInput.value = '';
+    };
+    textInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendBtn.click();
+        }
+    };
+}
 
 async function ensureMicMeter() {
     if (analyser) return;

@@ -11,6 +11,9 @@
         <div class="lang-toggle">
             <button class="btn small" data-lang-btn="en">English</button>
             <button class="btn small secondary" data-lang-btn="es">Espanol</button>
+            <button class="btn small secondary" data-lang-btn="ar">العربية</button>
+            <button class="btn small secondary" data-lang-btn="hi">हिंदी</button>
+            <button class="btn small secondary" data-lang-btn="tl">Tagalog</button>
         </div>
 
         <h1 data-i18n="title">Live Translator</h1>
@@ -67,6 +70,49 @@
                 copied: 'Copiado!',
                 link_copied: 'Enlace Copiado!',
             }
+            ,
+            ar: {
+                title: 'مترجم مباشر',
+                tagline: 'ترجمة صوتية فورية بين شخصين',
+                notice: 'لأفضل النتائج على أندرويد، استخدم كروم. قد لا يدعم Safari/WKWebView الإملاء المباشر.',
+                create: 'إنشاء غرفة جديدة',
+                share: 'إنشاء ونسخ الرابط',
+                divider: 'أو الانضمام إلى غرفة',
+                placeholder: 'أدخل رمز الغرفة',
+                join: 'انضمام',
+                share_base: 'رابط الأساس للمشاركة:',
+                copy: 'نسخ',
+                copied: 'تم النسخ!',
+                link_copied: 'تم نسخ الرابط!',
+            },
+            hi: {
+                title: 'लाइव ट्रांसलेटर',
+                tagline: 'दो लोगों के बीच रियल-टाइम अनुवाद',
+                notice: 'Android पर बेहतर परिणाम के लिए Chrome उपयोग करें। iOS Safari/WKWebView में लाइव डिक्टेशन काम न कर सकता है।',
+                create: 'नई रूम बनाएं',
+                share: 'रूम लिंक बनाएं और कॉपी करें',
+                divider: 'या मौजूदा रूम जॉइन करें',
+                placeholder: 'रूम कोड दर्ज करें',
+                join: 'जॉइन',
+                share_base: 'शेयर करने के लिए बेस URL:',
+                copy: 'कॉपी',
+                copied: 'कॉपी हो गया!',
+                link_copied: 'लिंक कॉपी हो गया!',
+            },
+            tl: {
+                title: 'Live Translator',
+                tagline: 'Real-time na pagsasalin ng boses',
+                notice: 'Pinakamahusay sa Android Chrome. Maaaring hindi gumana ang live dictation sa iOS Safari/WKWebView.',
+                create: 'Gumawa ng Bagong Room',
+                share: 'Gumawa at Kopyahin ang Link',
+                divider: 'o sumali sa existing room',
+                placeholder: 'Ilagay ang room code',
+                join: 'Sumali',
+                share_base: 'Base URL para i-share:',
+                copy: 'Kopyahin',
+                copied: 'Nakopya!',
+                link_copied: 'Nakopya ang link!',
+            }
         };
 
         let currentLang = 'en';
@@ -93,6 +139,12 @@
         const preferred = (navigator.language || '').toLowerCase();
         if (preferred.startsWith('es')) {
             currentLang = 'es';
+        } else if (preferred.startsWith('ar')) {
+            currentLang = 'ar';
+        } else if (preferred.startsWith('hi')) {
+            currentLang = 'hi';
+        } else if (preferred.startsWith('tl') || preferred.startsWith('fil')) {
+            currentLang = 'tl';
         }
         applyLang(currentLang);
 

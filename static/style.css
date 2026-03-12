@@ -206,6 +206,17 @@ input:focus, select:focus {
     transition: width 0.05s linear;
 }
 
+.text-input {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin: 0 0 0.75rem 0;
+}
+
+.text-input input {
+    flex: 1;
+}
+
 .advanced-panel {
     position: fixed;
     right: 16px;
@@ -528,6 +539,11 @@ input:focus, select:focus {
         bottom: 8px;
         width: 90vw;
         max-width: 320px;
+    }
+
+    .text-input {
+        flex-direction: column;
+        align-items: stretch;
     }
 }
 .header-row {
