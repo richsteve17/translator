@@ -16,6 +16,7 @@
         </div>
 
         <button id="create-btn" class="btn primary">Create New Room</button>
+        <button id="share-room-btn" class="btn secondary">Create & Copy Room Link</button>
 
         <div class="divider">or join an existing room</div>
 
@@ -47,6 +48,17 @@
             const res = await fetch('/create-room', { method: 'POST' });
             const data = await res.json();
             window.location.href = '/room/' + data.room_id;
+        };
+
+        document.getElementById('share-room-btn').onclick = async () => {
+            const res = await fetch('/create-room', { method: 'POST' });
+            const data = await res.json();
+            const url = `${baseUrl}/room/${data.room_id}`;
+            navigator.clipboard.writeText(url).then(() => {
+                const btn = document.getElementById('share-room-btn');
+                btn.textContent = 'Link Copied!';
+                setTimeout(() => { btn.textContent = 'Create & Copy Room Link'; }, 2000);
+            });
         };
 
         document.getElementById('join-btn').onclick = () => {
