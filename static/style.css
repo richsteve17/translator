@@ -30,6 +30,20 @@ body {
     margin-bottom: 2rem;
 }
 
+.notice {
+    background: #121a33;
+    border: 1px solid #2a2a4a;
+    color: #9fb0ff;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.notice.compact {
+    margin: 0 0 0.75rem 0;
+}
+
 .divider {
     color: #555;
     margin: 1.5rem 0;
@@ -353,5 +367,9 @@ input:focus, select:focus {
     .footer {
         flex-direction: column;
         text-align: center;
+    }
+
+    .notice {
+        font-size: 0.8rem;
     }
 }

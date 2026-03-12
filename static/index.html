@@ -11,6 +11,10 @@
         <h1>Live Translator</h1>
         <p class="tagline">Real-time speech translation between two people</p>
 
+        <div class="notice">
+            For best results on Android, use Chrome. iOS Safari/WKWebView may not support live dictation.
+        </div>
+
         <button id="create-btn" class="btn primary">Create New Room</button>
 
         <div class="divider">or join an existing room</div>
@@ -19,9 +23,26 @@
             <input type="text" id="room-code" placeholder="Enter room code" maxlength="6" autocomplete="off">
             <button id="join-btn" class="btn secondary">Join</button>
         </div>
+
+        <div class="share-link">
+            <span>Share base URL:</span>
+            <code id="base-url"></code>
+            <button id="copy-base-btn" class="btn small">Copy</button>
+        </div>
     </div>
 
     <script>
+        const baseUrl = window.location.origin;
+        const baseUrlEl = document.getElementById('base-url');
+        const copyBaseBtn = document.getElementById('copy-base-btn');
+        baseUrlEl.textContent = baseUrl;
+        copyBaseBtn.onclick = () => {
+            navigator.clipboard.writeText(baseUrl).then(() => {
+                copyBaseBtn.textContent = 'Copied!';
+                setTimeout(() => { copyBaseBtn.textContent = 'Copy'; }, 2000);
+            });
+        };
+
         document.getElementById('create-btn').onclick = async () => {
             const res = await fetch('/create-room', { method: 'POST' });
             const data = await res.json();
