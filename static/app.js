@@ -17,6 +17,8 @@ const localVideo = document.getElementById('local-video');
 const remoteVideo = document.getElementById('remote-video');
 const langButtons = document.querySelectorAll('[data-lang-btn]');
 const micFill = document.getElementById('mic-fill');
+const noticeEl = document.getElementById('notice');
+const noticeToggle = document.getElementById('notice-toggle');
 
 // --- State ---
 let ws = null;
@@ -466,6 +468,13 @@ if (preferredLang.startsWith('es')) {
     uiLang = 'es';
 }
 applyUiLang(uiLang);
+
+if (noticeToggle && noticeEl) {
+    noticeToggle.onclick = () => {
+        const isHidden = noticeEl.style.display === 'none';
+        noticeEl.style.display = isHidden ? 'block' : 'none';
+    };
+}
 
 async function ensureMicMeter() {
     if (analyser) return;
