@@ -8,7 +8,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from deep_translator import GoogleTranslator
 
-APP_VERSION = "2026-03-17.1"
+APP_VERSION = "2026-03-17.2"
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -56,7 +56,7 @@ async def room_debug():
       <script>
         document.getElementById('debug-js').textContent = 'inline-js: ok';
       </script>
-      <script src="/static/app.v3.js?v=20260317-1"></script>
+      <script src="/static/app.v4.js?v=20260317-2"></script>
     </body>
     </html>
     """
