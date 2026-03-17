@@ -1,12 +1,4 @@
-const APP_VERSION = '2026-03-17.3';
-window.APP_LOADED = true;
-window.APP_VERSION = APP_VERSION;
-try {
-    if (window.APP_BOOT && window.APP_BOOT.steps) {
-        window.APP_BOOT.steps.push('appjs:' + APP_VERSION + ':top');
-    }
-    console.log('APP_LOADED', APP_VERSION);
-} catch (e) {}
+const APP_VERSION = '2026-03-17.4';
 
 (function () {
 // --- Get room ID from URL ---
@@ -38,36 +30,6 @@ const langButtons = document.querySelectorAll('[data-lang-btn]');
 const textInput = document.getElementById('text-input');
 const sendBtn = document.getElementById('send-btn');
 const appVersionEl = document.getElementById('app-version');
-let debugEl = null;
-try {
-    debugEl = document.createElement('div');
-    debugEl.id = 'debug-banner';
-    debugEl.style.position = 'fixed';
-    debugEl.style.left = '8px';
-    debugEl.style.bottom = '8px';
-    debugEl.style.zIndex = '9999';
-    debugEl.style.maxWidth = '90vw';
-    debugEl.style.background = 'rgba(0,0,0,0.7)';
-    debugEl.style.color = '#ffb3b3';
-    debugEl.style.fontSize = '12px';
-    debugEl.style.padding = '6px 8px';
-    debugEl.style.borderRadius = '6px';
-    debugEl.style.display = 'none';
-    if (document.body) document.body.appendChild(debugEl);
-} catch (e) {}
-
-function showDebug(msg) {
-    if (!debugEl) return;
-    debugEl.textContent = msg;
-    debugEl.style.display = 'block';
-}
-
-window.addEventListener('error', (e) => {
-    showDebug(`JS error: ${e.message}`);
-});
-window.addEventListener('unhandledrejection', (e) => {
-    showDebug(`Promise error: ${e.reason}`);
-});
 
 // --- State ---
 let ws = null;
@@ -624,25 +586,25 @@ function setStatus(text, type) {
 }
 
 function applyUiLang(lang) {
+    const t = uiTranslations[lang];
+    if (!t) return;
     uiLang = lang;
     document.querySelectorAll('[data-i18n]').forEach((el) => {
         const key = el.getAttribute('data-i18n');
-        const value = uiTranslations[lang][key];
-        if (value) el.textContent = value;
+        if (t[key]) el.textContent = t[key];
     });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
         const key = el.getAttribute('data-i18n-placeholder');
-        const value = uiTranslations[lang][key];
-        if (value) el.setAttribute('placeholder', value);
+        if (t[key]) el.setAttribute('placeholder', t[key]);
     });
-    copyBtn.textContent = uiTranslations[lang].copy;
-    if (textInput) textInput.setAttribute('placeholder', uiTranslations[lang].type_here);
-    if (sendBtn) sendBtn.textContent = uiTranslations[lang].send;
-    if (!isListening) {
-        micBtn.textContent = uiTranslations[lang].start_listen;
+    if (copyBtn) copyBtn.textContent = t.copy;
+    if (textInput) textInput.setAttribute('placeholder', t.type_here);
+    if (sendBtn) sendBtn.textContent = t.send;
+    if (!isListening && micBtn) {
+        micBtn.textContent = t.start_listen;
     }
-    if (callBtn) callBtn.textContent = uiTranslations[lang].start_call;
-    if (hangupBtn) hangupBtn.textContent = uiTranslations[lang].hangup;
+    if (callBtn) callBtn.textContent = t.start_call;
+    if (hangupBtn) hangupBtn.textContent = t.hangup;
     if (appVersionEl) {
         appVersionEl.textContent = `v${APP_VERSION} | ui=${lang}`;
     }
@@ -668,8 +630,6 @@ applyUiLang(uiLang);
 if (uiLangSelect) {
     uiLangSelect.value = uiLang;
     uiLangSelect.onchange = () => applyUiLang(uiLangSelect.value);
-} else {
-    showDebug('UI lang select not found');
 }
 
 if (noticeToggle && noticeEl) {
@@ -684,15 +644,12 @@ function toggleAdvancedPanel(force) {
     const isOpen = advancedPanel.classList.contains('show');
     const next = typeof force === 'boolean' ? force : !isOpen;
     advancedPanel.classList.toggle('show', next);
-    advancedPanel.style.display = next ? 'block' : 'none';
 }
 
 if (advancedToggle && advancedPanel) {
     advancedToggle.onclick = () => {
         toggleAdvancedPanel();
     };
-} else {
-    showDebug('Advanced toggle/panel missing');
 }
 
 if (advancedClose && advancedPanel) {
@@ -724,8 +681,6 @@ if (sendBtn && textInput) {
         if (!text) return;
         if (ws && ws.readyState === WebSocket.OPEN) {
             ws.send(JSON.stringify({ type: 'speech_text', text }));
-        } else {
-            showDebug('WebSocket not ready');
         }
         textInput.value = '';
     };

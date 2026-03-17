@@ -127,48 +127,6 @@
         </div>
     </div>
 
-    <script>
-        window.APP_LOADED = false;
-        window.APP_LOADED_MARK = 'pending';
-        window.APP_BOOT = { startedAt: Date.now(), steps: ['inline:before'] };
-        window.APP_BOOT_LAST_ERROR = '';
-
-        function appBootNoteError(errText) {
-            window.APP_BOOT_LAST_ERROR = errText;
-            var el = document.getElementById('app-version');
-            if (el && !window.APP_LOADED) {
-                el.textContent = 'appjs:error ' + errText;
-            }
-        }
-
-        window.addEventListener('error', function (e) {
-            var msg = (e && e.message) ? e.message : 'unknown';
-            appBootNoteError(msg);
-        });
-        window.addEventListener('unhandledrejection', function (e) {
-            var reason = (e && e.reason) ? String(e.reason) : 'unknown';
-            appBootNoteError('promise ' + reason);
-        });
-    </script>
-    <script src="/static/app.v5.js?v=20260317-3"
-        onload="window.APP_LOADED_MARK='onload'; if(document.getElementById('app-version')){document.getElementById('app-version').textContent='appjs:onload';}"
-        onerror="window.APP_LOADED_MARK='onerror'; if(document.getElementById('app-version')){document.getElementById('app-version').textContent='appjs:onerror';}">
-    </script>
-    <script>
-        (function() {
-            var el = document.getElementById('app-version');
-            if (!el) return;
-            if (window.APP_BOOT && window.APP_BOOT.steps) {
-                window.APP_BOOT.steps.push('inline:after');
-            }
-            var steps = (window.APP_BOOT && window.APP_BOOT.steps) ? window.APP_BOOT.steps.join('|') : 'n/a';
-            var err = window.APP_BOOT_LAST_ERROR ? (' err:' + window.APP_BOOT_LAST_ERROR) : '';
-            if (window.APP_LOADED) {
-                el.textContent = 'appjs:' + (window.APP_VERSION || 'unknown');
-            } else {
-                el.textContent = 'appjs:missing (' + (window.APP_LOADED_MARK || 'n/a') + ') ' + steps + err;
-            }
-        })();
-    </script>
+    <script src="/static/app.js"></script>
 </body>
 </html>

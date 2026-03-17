@@ -1,14 +1,12 @@
 import asyncio
 import json
 import uuid
-from fastapi.responses import HTMLResponse
-
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from deep_translator import GoogleTranslator
 
-APP_VERSION = "2026-03-17.3"
+APP_VERSION = "2026-03-17.4"
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -39,34 +37,6 @@ async def room_page(room_id: str):
         },
     )
 
-
-@app.get("/room-debug")
-async def room_debug():
-    html = f"""
-    <!doctype html>
-    <html>
-    <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Room Debug</title>
-    </head>
-    <body style="font-family: system-ui; padding: 16px;">
-      <div id="debug-static">server-version: {APP_VERSION}</div>
-      <div id="debug-js"></div>
-      <script>
-        document.getElementById('debug-js').textContent = 'inline-js: ok';
-      </script>
-      <script src="/static/app.v5.js?v=20260317-3"></script>
-    </body>
-    </html>
-    """
-    return HTMLResponse(
-        html,
-        headers={
-            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
-            "Pragma": "no-cache",
-        },
-    )
 
 
 @app.post("/create-room")
