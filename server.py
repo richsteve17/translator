@@ -1,12 +1,32 @@
 import asyncio
 import json
+import os
 import uuid
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from deep_translator import GoogleTranslator
 
-APP_VERSION = "2026-03-17.4"
+APP_VERSION = "2026-03-21.1"
+
+# --- TURN server config (read from env) ---
+TURN_URLS = os.environ.get("TURN_URLS", "")
+TURN_USERNAME = os.environ.get("TURN_USERNAME", "")
+TURN_PASSWORD = os.environ.get("TURN_PASSWORD", "")
+
+
+def get_ice_servers():
+    servers = [{"urls": "stun:stun.l.google.com:19302"}]
+    if TURN_URLS:
+        for url in TURN_URLS.split(","):
+            url = url.strip()
+            if url:
+                servers.append({
+                    "urls": url,
+                    "username": TURN_USERNAME,
+                    "credential": TURN_PASSWORD,
+                })
+    return servers
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
@@ -69,7 +89,12 @@ async def websocket_endpoint(ws: WebSocket, room_id: str):
     print(f"User {user_id} joined room {room_id} ({len(rooms[room_id]['users'])} users)")
 
     role = "caller" if len(rooms[room_id]["users"]) == 1 else "callee"
-    await ws.send_json({"type": "welcome", "user_id": user_id, "role": role})
+    await ws.send_json({
+        "type": "welcome",
+        "user_id": user_id,
+        "role": role,
+        "ice_servers": get_ice_servers(),
+    })
 
     await broadcast_status(room_id)
 

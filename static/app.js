@@ -1,4 +1,4 @@
-const APP_VERSION = '2026-03-17.4';
+const APP_VERSION = '2026-03-21.1';
 
 (function () {
 // --- Get room ID from URL ---
@@ -40,6 +40,7 @@ let localStream = null;
 let peerConnection = null;
 let callActive = false;
 let pendingOffer = null;
+let iceServers = [{ urls: 'stun:stun.l.google.com:19302' }];
 let uiLang = 'en';
 let interimLineEl = null;
 let meterStream = null;
@@ -244,6 +245,9 @@ function connect() {
 
         if (data.type === 'welcome') {
             isCaller = data.role === 'caller';
+            if (data.ice_servers && data.ice_servers.length) {
+                iceServers = data.ice_servers;
+            }
         } else if (data.type === 'subtitle') {
             addSubtitle(data.translated, data.original, 'partner');
         } else if (data.type === 'transcript') {
@@ -481,7 +485,7 @@ function stopCall() {
 function ensurePeerConnection() {
     if (peerConnection) return;
     peerConnection = new RTCPeerConnection({
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        iceServers: iceServers,
     });
 
     peerConnection.onicecandidate = (event) => {
