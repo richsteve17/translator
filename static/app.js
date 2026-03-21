@@ -1,4 +1,4 @@
-const APP_VERSION = '2026-03-21.1';
+const APP_VERSION = '2026-03-21.2';
 
 (function () {
 // --- Get room ID from URL ---
@@ -40,7 +40,13 @@ let localStream = null;
 let peerConnection = null;
 let callActive = false;
 let pendingOffer = null;
-let iceServers = [{ urls: 'stun:stun.l.google.com:19302' }];
+let iceServers = [
+    { urls: 'stun:stun.relay.metered.ca:80' },
+    { urls: 'turn:staticauth.openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayprojectsecret' },
+    { urls: 'turn:staticauth.openrelay.metered.ca:80?transport=tcp', username: 'openrelayproject', credential: 'openrelayprojectsecret' },
+    { urls: 'turn:staticauth.openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayprojectsecret' },
+    { urls: 'turns:staticauth.openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayprojectsecret' },
+];
 let uiLang = 'en';
 let interimLineEl = null;
 let meterStream = null;
