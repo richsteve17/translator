@@ -461,7 +461,8 @@ async function startCall() {
         await peerConnection.setLocalDescription(answer);
         sendSignal('webrtc_answer', answer);
         pendingOffer = null;
-    } else if (isCaller) {
+    } else {
+        // Either side can initiate the call
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
         sendSignal('webrtc_offer', offer);
