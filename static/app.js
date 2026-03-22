@@ -40,6 +40,7 @@ let localStream = null;
 let peerConnection = null;
 let callActive = false;
 let pendingOffer = null;
+let pendingIceCandidates = [];
 let iceServers = [
     { urls: 'stun:stun.relay.metered.ca:80' },
     { urls: 'turn:staticauth.openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayprojectsecret' },
@@ -455,6 +456,7 @@ async function startCall() {
 
     if (pendingOffer) {
         await peerConnection.setRemoteDescription(new RTCSessionDescription(pendingOffer));
+        await flushIceCandidates();
         const answer = await peerConnection.createAnswer();
         await peerConnection.setLocalDescription(answer);
         sendSignal('webrtc_answer', answer);
@@ -470,6 +472,7 @@ function stopCall() {
     callActive = false;
     hangupBtn.disabled = true;
     pendingOffer = null;
+    pendingIceCandidates = [];
 
     if (peerConnection) {
         peerConnection.ontrack = null;
@@ -515,6 +518,7 @@ async function handleOffer(offer) {
     }
     ensurePeerConnection();
     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    await flushIceCandidates();
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
     sendSignal('webrtc_answer', answer);
@@ -523,14 +527,30 @@ async function handleOffer(offer) {
 async function handleAnswer(answer) {
     if (!peerConnection || !answer) return;
     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    await flushIceCandidates();
 }
 
 async function handleIce(candidate) {
-    if (!peerConnection || !candidate) return;
+    if (!candidate) return;
+    if (!peerConnection || !peerConnection.remoteDescription) {
+        pendingIceCandidates.push(candidate);
+        return;
+    }
     try {
         await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     } catch (e) {
         console.log('[WebRTC] ICE error:', e);
+    }
+}
+
+async function flushIceCandidates() {
+    while (pendingIceCandidates.length > 0) {
+        const candidate = pendingIceCandidates.shift();
+        try {
+            await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+        } catch (e) {
+            console.log('[WebRTC] ICE flush error:', e);
+        }
     }
 }
 
