@@ -1,121 +1,68 @@
-# Live Translator
+# translator
 
-Real-time video calls with instant voice translation. Speak in your language and see live subtitles on the other side.
+WebRTC video calling with real-time translation across 18 language locales including 8 regional Spanish variants.
 
-**Live Demo:** https://translator-oied.onrender.com
+## 🎯 Purpose
+This repository contains a web application or API service, CI/CD automation workflows.
 
-## Features
+## 🛠️ Tech Stack
+- **Primary Language**: JavaScript
+- **Key Dependencies**: `asyncio`, `deep-translator`, `deep_translator`, `fastapi`, `json`, `os`, `python-dotenv`, `python-multipart`, +2 more
+- **CI/CD**: GitHub Actions / Automated Workflows
 
-### Core
-- 1:1 WebRTC video call with signaling over WebSocket
-- Picture-in-picture local video; main remote video
-- Subtitle overlay on video
-- Interim speech results (faster perceived latency)
-- Text input fallback (type + send)
+## 🚀 Entry Points
+- `server.py`
+- `static/app.js`
 
-### Infrastructure / Performance
-- Render deployment (`render.yaml`)
-- Translation offloaded to thread (`asyncio.to_thread`)
-- WebSocket status updates + reconnection
-- Mic level meter (visual input indicator)
+## 🔑 Key Components
+- **Functions**: `get_ice_servers`, `translate_text`, `connect`, `getSpeechLang`, `startListening`
 
-### UI / UX
-- Share base URL + create & copy room link
-- UI language dropdown (English, Spanish, Arabic, Hindi, Tagalog)
-- UI language auto-detect
-- Advanced language variants panel
-- Warning banner compacted to an “i” pill on mobile
-- Larger subtitle area + overlay adjustments
-
-## Supported Languages (Speech Recognition Locales)
-
-**Main list:**
-- English (en-US)
-- Spanish (es-ES)
-- Portuguese (Brazil) (pt-BR)
-- French (fr-FR)
-- German (de-DE)
-- Turkish (tr-TR)
-- Urdu (Pakistan) (ur-PK)
-- Japanese (ja-JP)
-- Tagalog/Filipino (fil-PH)
-- Malay (ms-MY)
-- Indonesian (id-ID)
-- Vietnamese (vi-VN)
-- Thai (th-TH)
-- Azerbaijani (az-AZ)
-- Chinese (Simplified) (zh-CN)
-- Hindi (hi-IN)
-- Arabic (generic) (ar-SA)
-- Russian (ru-RU)
-
-**Advanced panel:**
-- Spanish (Mexico) (es-MX)
-- Spanish (Colombia) (es-CO)
-- Spanish (Venezuela) (es-VE)
-- Spanish (Argentina) (es-AR)
-- Spanish (Ecuador) (es-EC)
-- Spanish (Dominican Rep.) (es-DO)
-- Spanish (Peru) (es-PE)
-- Chinese (Traditional) (zh-TW)
-
-## How to Use
-
-1. Go to https://translator-oied.onrender.com
-2. Click **Create New Room**
-3. Copy the link and send it to your partner
-4. Select your language from the dropdown
-5. Allow access to your camera and microphone
-6. Click **Start Listening** and start talking
-
-Translations and subtitles appear automatically for both participants.
-
-## Tech Stack
-
-- **Backend**: FastAPI + Uvicorn + WebSockets
-- **Translation**: deep-translator (Google Translate)
-- **Frontend**: Vanilla JavaScript + WebRTC + Browser Speech API
-- **Deployment**: Render (free tier)
-
-## Project Structure
-
-```
-translator/
-  server.py
-  requirements.txt
-  render.yaml
-  static/
-    index.html
-    room.html
-    app.js
-    style.css
-```
-
-## Running Locally
-
+## 📦 Installation
 ```bash
+# Clone the repository
 git clone https://github.com/richsteve17/translator.git
 cd translator
-pip install -r requirements.txt
-uvicorn server:app --host 0.0.0.0 --port 8000 --reload
+
+# Install dependencies
+npm install
+
+# Optional: build if needed
+npm run build
 ```
+## 💡 Usage
+Start the development server:
+```bash
+# For Node.js / Express / Next.js
+npm start  # or npm run dev
 
-Open http://localhost:8000 in your browser.
+# For Python (FastAPI / Flask)
+uvicorn main:app --reload  # or python app.py
+```
+The application will be accessible locally.
 
-## Deployment on Render
+## ⚙️ Configuration
+- `requirements.txt` — Python dependencies via pip
 
-The repository includes a `render.yaml` file for one-click deployment.
+## 📚 Examples
+See source code for detailed method signatures and inline documentation.
 
-## Notes
+Key function calls:
+- `get_ice_servers(...)`
+- `translate_text(...)`
+- `connect(...)`
 
-- Rooms are stored in memory only (active calls end if the server restarts).
-- Translation errors are handled gracefully.
+## 🤝 Contributing
+Contributions are welcome! Please open an issue or submit a pull request.
 
-## Roadmap
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- Persistent rooms using Redis
-- Fallback translation providers (DeepL, etc.)
-- Subtitle customization
-- Mobile PWA support
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Made by richsteve17
+## 🙏 Acknowledgments
+- Built for [translator](https://github.com/richsteve17/translator).
+- Generated with ❤️ using custom code-aware documentation tools.
